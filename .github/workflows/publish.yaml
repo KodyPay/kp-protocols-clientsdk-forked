@@ -14,7 +14,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_REGISTRY }}
       NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_REGISTRY }}
       NPM_CONFIG_TOKEN: ${{ secrets.GH_PACKAGES_REGISTRY }}
-      NEXT_VERSION: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 21
@@ -47,7 +46,8 @@ jobs:
         run: |
           npm ci
           npm run build
-          npm version ${{ NEXT_VERSION }}
+          npm version ${{ env.NEXT_VERSION }}
           npm publish --scope=@kodypay ./build/grpc-web
         env:
+          NEXT_VERSION: ${{ github.ref_name }}
           NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_REGISTRY }}
