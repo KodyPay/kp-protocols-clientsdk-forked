@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Kody gRPC Protocol for Client SDK",
   "scripts": {
-    "build": "mkdirp build/grpc-web; cp src/main/proto/com/kodypay/grpc/pay/v1/pay.proto build/grpc-web; cd build/grpc-web; grpc_tools_node_protoc -I=. pay.proto --js_out=import_style=commonjs:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.",
+    "build": "mkdir build/grpc-web; cp src/main/proto/com/kodypay/grpc/pay/v1/pay.proto build/grpc-web; cd build/grpc-web; grpc_tools_node_protoc -I=. pay.proto --js_out=import_style=commonjs:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.",
     "postversion": "cp package.json build/grpc-web/package.json; cp node_modules/grpc-web/index.js build/grpc-web/grpc-web.js; cp node_modules/google-protobuf/google-protobuf.js build/grpc-web/"
   },
   "author": "tech@kodypay.com",
