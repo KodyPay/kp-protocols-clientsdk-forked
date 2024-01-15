@@ -36,4 +36,4 @@ jobs:
           cache: npm
           registry-url: 'https://npm.pkg.github.com/'
       - name: Build NPM
-        run: npm build
+        run: npm run build
