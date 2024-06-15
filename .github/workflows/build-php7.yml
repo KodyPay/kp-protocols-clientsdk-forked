@@ -75,8 +75,8 @@ jobs:
         run: |
           cd php7
           composer config repositories.pkg vcs https://github.com/KodyPay/kp-protocols-clientsdk
-          composer config http-basic.github.com ${{ secrets.GITHUB_ACTOR }} ${{ secrets.GITHUB_TOKEN }}
+          composer config http-basic.github.com ${{ github.actor }} ${{ secrets.GH_PACKAGES_REGISTRY }}
           composer publish --repository-url https://github.com/KodyPay/kp-protocols-clientsdk
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_REGISTRY }}
           GITHUB_ACTOR: ${{ github.actor }}
