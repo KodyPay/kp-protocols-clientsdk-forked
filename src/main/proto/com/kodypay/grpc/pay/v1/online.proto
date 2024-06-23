@@ -1,0 +1,104 @@
+syntax = "proto3";
+package com.kodypay.grpc.pay.v1;
+option java_multiple_files = true;
+option java_outer_classname = "KodyOnlinePaymentsProto";
+option java_package = "com.kodypay.grpc.pay.v1";
+import "google/protobuf/timestamp.proto";
+
+// All service requests require X-API-Key header with 'API Key' value
+service OnlinePaymentService {
+  // Initiates a payment and returns a URL for the user to complete payment
+  rpc InitiatePayment(PaymentInitiationRequest) returns (PaymentInitiationResponse);
+
+  rpc PaymentDetails(PaymentDetailsRequest) returns (PayResponse);
+
+}
+
+// Payment Initiation Request
+message PaymentInitiationRequest {
+  string store_id = 1; // Your Kody store id
+  int64 timestamp = 2; // Timestamp to prevent replay attacks
+  string nonce = 3; // Nonce to prevent replay attacks and set security during redirects
+  string payment_reference = 4; // Your unique reference of this payment request.
+  double amount = 5; // Amount in minor units. For example, 2000 means GBP 20.00.
+  string currency = 6; // ISO 4217 three letter currency code
+  string order_id = 7; // Your identifier of the order. It doesn't have to be unique, for example when the same order has multiple payments.
+  optional string order_metadata = 8; // A data set that can be used to store information about the order and used in the payment details. For example a JSON with checkout items. It will be useful as evidence to challenge chargebacks or any risk data.
+  string return_url = 9; // The URL that your client application will be redirected to after the payment is authorised. You can include additional query parameters, for example, the user id or order reference.
+  string payer_id = 10; // Your internal identifier of the user
+  optional string payer_email_address = 11; // We recommend that you provide this data, as it is used in velocity fraud checks. Required for 3D Secure 2 transactions.
+  optional string payer_ip_address = 12; // The payer IP address used for risk checks, also required for 3D Secure 2 transactions.
+  optional string payer_locale = 13; // The language code and country code to specify the language to display the payment pages. It will default to en_GB if not set.
+  optional string payer_statement = 14; // The text to be shown on the payer's bank statement. Maximum 22 characters, otherwise banks might truncate the string. If not set it will use the store's terminals receipt printing name. Allowed characters: a-z, A-Z, 0-9, spaces, and special characters . , ' _ - ? + * /
+}
+
+// Payment Initiation Response
+message PaymentInitiationResponse {
+  oneof result {
+    Response response = 1;
+    Error error = 2;
+  }
+
+  message Response {
+    string payment_id = 1; // The unique identifier created by Kody
+    string payment_url = 2; // The URL to send the user to from your application
+  }
+
+  message Error {
+    Type type = 1;
+    string message = 2;
+
+    enum Type {
+      UNKNOWN = 0;
+      SECURITY_ISSUE = 1;
+      DUPLICATE_ATTEMPT = 2;
+      INVALID_REQUEST = 3;
+    }
+  }
+}
+
+message PaymentDetailsRequest {
+  string store_id = 1; // Your Kody store id
+  oneof payment_identifier {
+    string payment_id = 2; // The unique identifier created by Kody
+    string payment_reference = 3; // Your unique payment reference that was set during the initiation
+  }
+}
+
+message PaymentDetailsResponse {
+  oneof result {
+    Response response = 1;
+    Error error = 2;
+  }
+
+  message Response {
+    string payment_id = 1; // The unique identifier created by Kody
+    string payment_reference = 2; // Your unique payment reference that was set during the initiation
+    string order_id = 3; // Your identifier of the order. It doesn't have to be unique, for example when the same order has multiple payments.
+
+    PaymentStatus status = 4;
+    optional string payment_data_json = 5; // json blob containing payment data
+
+    google.protobuf.Timestamp date_created = 6;
+    google.protobuf.Timestamp date_paid = 7;
+
+    enum PaymentStatus {
+      PENDING = 0;
+      SUCCESS = 1;
+      FAILED = 2;
+      CANCELLED = 3;
+    }
+  }
+
+  message Error {
+    Type type = 1;
+    string message = 2;
+
+    enum Type {
+      UNKNOWN = 0;
+      SECURITY_ISSUE = 1;
+      NOT_FOUND = 3;
+    }
+  }
+
+}
