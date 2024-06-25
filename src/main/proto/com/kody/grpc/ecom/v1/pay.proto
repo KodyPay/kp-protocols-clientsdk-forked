@@ -1,17 +1,16 @@
 syntax = "proto3";
-package com.kodypay.grpc.pay.v1;
+package com.kody.grpc.ecom.v1;
 option java_multiple_files = true;
-option java_outer_classname = "KodyOnlinePaymentsProto";
-option java_package = "com.kodypay.grpc.pay.v1";
+option java_outer_classname = "KodyEcomPaymentsProto";
+option java_package = "com.kody.grpc.ecom.v1";
 import "google/protobuf/timestamp.proto";
 
 // All service requests require X-API-Key header with 'API Key' value
-service OnlinePaymentService {
+service KodyEcomPaymentsService {
   // Initiates a payment and returns a URL for the user to complete payment
   rpc InitiatePayment(PaymentInitiationRequest) returns (PaymentInitiationResponse);
 
   rpc PaymentDetails(PaymentDetailsRequest) returns (PaymentDetailsResponse);
-
 }
 
 // Payment Initiation Request
