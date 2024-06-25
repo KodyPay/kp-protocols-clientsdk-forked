@@ -3,7 +3,7 @@ name: release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '*'
 
 jobs:
   release:
@@ -24,6 +24,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: kodypay/kody-clientsdk-php7-forked
-          event-type: tag-created
+          event-type: tag-push
           client-payload: '{"tag": "${{ github.ref }}", "repository": "${{ github.repository }}"}'
-
