@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Dispatch PHP SDK
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v3
         with:
           repository: kodypay/kody-clientsdk-php7-forked
           client-payload: '{"tag": "${{ github.ref }}", "repository": "${{ github.repository }}"}'
